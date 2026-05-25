@@ -1,10 +1,12 @@
 # Deploy KYN AURA len Render bang Docker
 
-## 1. Chuan bi database MySQL
+## 1. Chuan bi PostgreSQL tren Render
 
-Render khong co MySQL managed database mac dinh, nen can dung MySQL ben ngoai nhu Aiven, Railway, PlanetScale, Clever Cloud, hoac server MySQL rieng.
+App da duoc doi sang PostgreSQL de dung database managed cua Render.
 
-Tao database, vi du:
+Neu dung Blueprint (`render.yaml`), Render se tao database `kyn-aura-db` va tu gan bien moi truong cho web service.
+
+Neu setup thu cong, tao PostgreSQL database truoc:
 
 ```text
 kin_shop
@@ -12,16 +14,22 @@ kin_shop
 
 ## 2. Cau hinh bien moi truong tren Render
 
-Khi tao Web Service tren Render, chon Docker va them cac bien moi truong:
+Khi tao Web Service thu cong tren Render, them cac bien moi truong theo thong tin cua PostgreSQL database:
 
 ```text
-DB_URL=jdbc:mysql://<host>:<port>/<database>?useSSL=true&allowPublicKeyRetrieval=true&serverTimezone=UTC
-DB_USERNAME=<mysql-user>
-DB_PASSWORD=<mysql-password>
+DB_HOST=<postgres-host>
+DB_PORT=5432
+DB_NAME=<database-name>
+DB_USERNAME=<postgres-user>
+DB_PASSWORD=<postgres-password>
 JAVA_OPTS=-Xms128m -Xmx384m
 ```
 
-Neu MySQL provider yeu cau SSL rieng, dieu chinh tham so `useSSL` theo tai lieu cua provider do.
+Neu muon dung full JDBC URL thay vi cac bien tren, co the set:
+
+```text
+DB_URL=jdbc:postgresql://<postgres-host>:5432/<database-name>
+```
 
 ## 3. Deploy bang render.yaml
 
@@ -31,7 +39,7 @@ Repo da co `render.yaml`, nen co the deploy bang Blueprint tren Render:
 2. Vao Render Dashboard.
 3. Chon New > Blueprint.
 4. Chon GitHub repository cua project.
-5. Dien `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` khi Render yeu cau.
+5. Render se tao PostgreSQL database va gan env vars tu `render.yaml`.
 6. Deploy.
 
 ## 4. Deploy thu cong
@@ -44,7 +52,7 @@ Neu khong dung Blueprint:
 4. Runtime: Docker.
 5. Dockerfile path: `./Dockerfile`.
 6. Health check path: `/login`.
-7. Them bien moi truong nhu muc 2.
+7. Them bien moi truong PostgreSQL nhu muc 2.
 8. Deploy.
 
 ## 5. Tai khoan dang nhap mac dinh

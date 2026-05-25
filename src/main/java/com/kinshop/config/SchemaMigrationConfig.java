@@ -33,7 +33,8 @@ public class SchemaMigrationConfig {
 
     private void alterDecimal(JdbcTemplate jdbcTemplate, String tableName, String columnName) {
         try {
-            jdbcTemplate.execute("alter table " + tableName + " modify column " + columnName + " decimal(19,2) not null");
+            jdbcTemplate.execute("alter table " + tableName + " alter column " + columnName + " type numeric(19,2)");
+            jdbcTemplate.execute("alter table " + tableName + " alter column " + columnName + " set not null");
         } catch (RuntimeException ignored) {
             // Some fresh databases may not have every table/column before Hibernate finishes updating.
         }

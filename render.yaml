@@ -6,11 +6,30 @@ services:
     dockerfilePath: ./Dockerfile
     healthCheckPath: /login
     envVars:
-      - key: DB_URL
-        sync: false
+      - key: DB_HOST
+        fromDatabase:
+          name: kyn-aura-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: kyn-aura-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: kyn-aura-db
+          property: database
       - key: DB_USERNAME
-        sync: false
+        fromDatabase:
+          name: kyn-aura-db
+          property: user
       - key: DB_PASSWORD
-        sync: false
+        fromDatabase:
+          name: kyn-aura-db
+          property: password
       - key: JAVA_OPTS
         value: -Xms128m -Xmx384m
+
+databases:
+  - name: kyn-aura-db
+    databaseName: kin_shop
+    user: kin_shop_user

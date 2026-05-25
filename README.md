@@ -1,32 +1,34 @@
 # KYN AURA
 
-Spring Boot + MySQL + Thymeleaf web app for stock, sales, returns, invoices, and reports.
+Spring Boot + PostgreSQL + Thymeleaf web app for stock, sales, returns, invoices, and reports.
 
 ## Requirements
 
 - Java 11
 - Maven
-- MySQL 8+
+- PostgreSQL 12+
 
 ## Database
 
-The app can create the database automatically when the MySQL user has permission:
+Create a PostgreSQL database, for example:
 
 ```properties
-jdbc:mysql://localhost:3306/kin_shop?createDatabaseIfNotExist=true
+kin_shop
 ```
 
 Default credentials are:
 
-- Username: `root`
-- Password: empty
+- Username: `postgres`
+- Password: `postgres`
 
 Override them with environment variables when needed:
 
 ```powershell
-$env:DB_USERNAME="root"
+$env:DB_HOST="localhost"
+$env:DB_PORT="5432"
+$env:DB_NAME="kin_shop"
+$env:DB_USERNAME="postgres"
 $env:DB_PASSWORD="your-password"
-$env:DB_URL="jdbc:mysql://localhost:3306/kin_shop?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
 ```
 
 ## Run

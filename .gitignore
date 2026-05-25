@@ -1,0 +1,33 @@
+# Maven
+target/
+*.class
+
+# Logs
+*.log
+logs/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+application-local.properties
+application-*.local
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Runtime uploads/temp
+tmp/
+temp/
+
+# Docker local overrides
+docker-compose.override.yml
