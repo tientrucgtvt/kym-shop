@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice - KYN AURA</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+<div th:replace="fragments/menu :: sidebar('sale')"></div>
+<div class="page-shell">
+<div th:replace="fragments/menu :: topbar(${'Invoice ' + order.invoiceNumber})"></div>
+<div class="section-bar">
+    <div th:replace="fragments/menu :: saleChild('orders')"></div>
+</div>
+<main>
+    <p class="success" th:if="${success}" th:text="${success}"></p>
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+    <section class="card">
+        <a class="button" th:if="${order.status.name() != 'CANCELLED' && @permissionService.has('RETURN','CREATE')}" th:href="@{/orders/{id}/return(id=${order.id})}">Refund / Return Item</a>
+        <a class="button" href="javascript:window.print()">Print Invoice</a>
+        <form th:if="${order.status.name() != 'CANCELLED' && order.refundedAmount.compareTo(T(java.math.BigDecimal).ZERO) == 0 && @permissionService.has('SALE_ORDER','CANCEL')}"
+              th:action="@{/orders/{id}/cancel(id=${order.id})}"
+              method="post"
+              style="display:inline"
+              onsubmit="return confirm('Cancel this order and restore stock?');">
+            <button class="button danger-button" type="submit">Cancel Order</button>
+        </form>
+    </section>
+    <section class="card">
+        <div class="grid">
+            <div>
+                <strong>Customer Type</strong>
+                <p th:text="${order.customerType}"></p>
+            </div>
+            <div>
+                <strong>Customer</strong>
+                <p th:text="${order.customerName ?: 'Walk-in customer'}"></p>
+            </div>
+            <div>
+                <strong>Tax Number</strong>
+                <p th:text="${order.customerTaxNumber ?: '-'}"></p>
+            </div>
+            <div>
+                <strong>Phone</strong>
+                <p th:text="${order.customerPhone ?: '-'}"></p>
+            </div>
+            <div>
+                <strong>Address</strong>
+                <p th:text="${order.customerAddress ?: '-'}"></p>
+            </div>
+            <div>
+                <strong>Date</strong>
+                <p th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm')}"></p>
+            </div>
+            <div>
+                <strong>Status</strong>
+                <p th:text="${order.status}"></p>
+            </div>
+        </div>
+    </section>
+
+    <section class="card">
+        <table>
+            <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Returned</th>
+                <th>Unit Price</th>
+                <th>Import Unit Price</th>
+                <th>Item Discount</th>
+                <th>Total</th>
+                <th>Item Profit</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${order.items}">
+                <td th:text="${item.product.name}"></td>
+                <td th:text="${@formatUtils.qty(item.quantity)}"></td>
+                <td th:text="${@formatUtils.qty(item.returnedQuantity)}"></td>
+                <td th:text="${@formatUtils.vnd(item.unitPrice)}"></td>
+                <td th:text="${@formatUtils.vnd(item.importPrice)}"></td>
+                <td th:text="${@formatUtils.vnd(item.discountAmount)}"></td>
+                <td th:text="${@formatUtils.vnd(item.lineTotal)}"></td>
+                <td th:text="${@formatUtils.vnd(item.itemProfit)}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3 th:text="${'Subtotal: ' + @formatUtils.vnd(order.subtotal)}"></h3>
+        <h3 th:text="${'Item Discount: ' + @formatUtils.vnd(order.itemDiscountAmount)}"></h3>
+        <h3 th:text="${'Order Discount: ' + @formatUtils.vnd(order.discountAmount)}"></h3>
+        <h2 th:text="${'Total: ' + @formatUtils.vnd(order.totalAmount)}"></h2>
+        <h3 th:text="${'Refunded: ' + @formatUtils.vnd(order.refundedAmount)}"></h3>
+    </section>
+</main>
+</div>
+</div>
+</body>
+</html>

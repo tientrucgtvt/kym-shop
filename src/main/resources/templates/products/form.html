@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product - KYN AURA</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+<div th:replace="fragments/menu :: sidebar('product')"></div>
+<div class="page-shell">
+<div th:replace="fragments/menu :: topbar(${product.id == null ? 'New Product' : 'Edit Product'})"></div>
+<div class="section-bar">
+    <div th:replace="fragments/menu :: productChild(${product.id == null ? 'new' : 'list'})"></div>
+</div>
+<main>
+    <section class="card">
+        <form th:action="@{/products}" th:object="${product}" method="post">
+            <input type="hidden" th:field="*{id}">
+
+            <label>SKU</label>
+            <input th:field="*{sku}" required>
+
+            <label>Name</label>
+            <input th:field="*{name}" required>
+
+            <div class="grid">
+                <div>
+                    <label>Brand</label>
+                    <select th:field="*{brand}">
+                        <option value="">No brand</option>
+                        <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
+                    </select>
+                </div>
+                <div>
+                    <label>Category</label>
+                    <select th:field="*{category}">
+                        <option value="">No category</option>
+                        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <label>Description</label>
+            <textarea th:field="*{description}" rows="3"></textarea>
+
+            <div class="grid">
+                <div>
+                    <label>Import Price</label>
+                    <input type="number" step="0.01" min="0" th:field="*{importPrice}">
+                </div>
+                <div>
+                    <label>Sale Price</label>
+                    <input type="number" step="0.01" min="0" th:field="*{salePrice}">
+                </div>
+                <div>
+                    <label>Minimum Stock</label>
+                    <input type="number" min="0" th:field="*{minStockLevel}">
+                </div>
+            </div>
+
+            <label>
+                <input type="checkbox" th:field="*{active}" style="width:auto"> Active
+            </label>
+
+            <button class="button" type="submit">Save Product</button>
+        </form>
+    </section>
+</main>
+</div>
+</div>
+</body>
+</html>

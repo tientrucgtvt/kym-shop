@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sales - KYN AURA</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+<div th:replace="fragments/menu :: sidebar('sale')"></div>
+<div class="page-shell">
+<div th:replace="fragments/menu :: topbar('Sale Management')"></div>
+<div class="section-bar">
+    <div th:replace="fragments/menu :: saleChild('orders')"></div>
+</div>
+<main>
+    <p class="success" th:if="${success}" th:text="${success}"></p>
+    <section class="card">
+        <table>
+            <thead>
+            <tr>
+                <th>Invoice</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Refunded</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <td th:text="${order.invoiceNumber}"></td>
+                <td th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${order.customerName}"></td>
+                <td th:text="${@formatUtils.vnd(order.totalAmount)}"></td>
+                <td th:text="${@formatUtils.vnd(order.refundedAmount)}"></td>
+                <td th:text="${order.status}"></td>
+                <td><a th:href="@{/orders/{id}(id=${order.id})}">Invoice</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</div>
+</div>
+</body>
+</html>

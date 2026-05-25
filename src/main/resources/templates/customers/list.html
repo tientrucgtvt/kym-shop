@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customers - KYN AURA</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+<div th:replace="fragments/menu :: sidebar('sale')"></div>
+<div class="page-shell">
+<div th:replace="fragments/menu :: topbar('Customers')"></div>
+<div class="section-bar">
+    <div th:replace="fragments/menu :: saleChild('customers')"></div>
+</div>
+<main>
+    <p class="success" th:if="${success}" th:text="${success}"></p>
+    <section class="card">
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Tax Number</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="customer : ${customers}">
+                <td th:text="${customer.name}"></td>
+                <td th:text="${customer.type}"></td>
+                <td th:text="${customer.taxNumber ?: '-'}"></td>
+                <td th:text="${customer.phoneNumber ?: '-'}"></td>
+                <td th:text="${customer.address ?: '-'}"></td>
+                <td th:text="${customer.active ? 'Active' : 'Inactive'}"></td>
+                <td><a th:if="${@permissionService.has('CUSTOMER','UPDATE')}" th:href="@{/customers/{id}/edit(id=${customer.id})}">Edit</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Products - KYN AURA</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+<div th:replace="fragments/menu :: sidebar('product')"></div>
+<div class="page-shell">
+<div th:replace="fragments/menu :: topbar('Products')"></div>
+<div class="section-bar">
+    <div th:replace="fragments/menu :: productChild('list')"></div>
+</div>
+<main>
+    <p class="success" th:if="${success}" th:text="${success}"></p>
+    <section class="card">
+        <table>
+            <thead>
+            <tr>
+                <th>SKU</th>
+                <th>Name</th>
+                <th>Brand</th>
+                <th>Category</th>
+                <th>Import Price</th>
+                <th>Sale Price</th>
+                <th>Stock</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${products}">
+                <td th:text="${product.sku}"></td>
+                <td th:text="${product.name}"></td>
+                <td th:text="${product.brand == null ? '-' : product.brand.name}"></td>
+                <td th:text="${product.category == null ? '-' : product.category.name}"></td>
+                <td th:text="${@formatUtils.vnd(product.importPrice)}"></td>
+                <td th:text="${@formatUtils.vnd(product.salePrice)}"></td>
+                <td th:text="${@formatUtils.qty(product.stockQuantity)}"></td>
+                <td th:text="${product.active ? 'Active' : 'Inactive'}"></td>
+                <td><a th:if="${@permissionService.has('PRODUCT','UPDATE')}" th:href="@{/products/{id}/edit(id=${product.id})}">Edit</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</div>
+</div>
+</body>
+</html>

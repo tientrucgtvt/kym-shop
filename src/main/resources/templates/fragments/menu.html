@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<aside class="sidebar" th:fragment="sidebar(active)">
+    <a class="sidebar-brand" th:href="@{/}">
+        <img th:src="@{/images/kyn-aura-logo.png}" alt="KYN AURA logo">
+        <span>KYN AURA</span>
+    </a>
+    <p class="sidebar-label">Main Menu</p>
+    <nav class="main-menu">
+        <a th:if="${@permissionService.has('PRODUCT','VIEW') || @permissionService.has('BRAND','VIEW') || @permissionService.has('CATEGORY','VIEW') || @permissionService.has('STOCK','VIEW')}" th:href="@{/products}" th:classappend="${active == 'product'} ? 'active'">Product</a>
+        <a th:if="${@permissionService.has('SALE_ORDER','VIEW') || @permissionService.has('CUSTOMER','VIEW') || @permissionService.has('RETURN','VIEW')}" th:href="@{/orders}" th:classappend="${active == 'sale'} ? 'active'">Sale</a>
+        <a th:if="${@permissionService.has('REPORT','VIEW')}" th:href="@{/reports}" th:classappend="${active == 'report'} ? 'active'">Report</a>
+        <a th:if="${@permissionService.has('ACCESS_RIGHT','VIEW')}" th:href="@{/access-rights}" th:classappend="${active == 'access'} ? 'active'">Access Rights</a>
+    </nav>
+</aside>
+
+<header class="top-bar" th:fragment="topbar(title)">
+    <div class="top-bar-left">
+        <span class="menu-toggle">☰</span>
+        <div>
+            <h1 th:text="${title}">Dashboard</h1>
+            <p><a th:href="@{/}">Home</a> / <span th:text="${title}">Dashboard</span></p>
+        </div>
+    </div>
+    <div class="top-actions">
+        <span th:text="${@permissionService.currentUsername()}">admin</span>
+        <form th:action="@{/logout}" method="post">
+            <button class="link-button" type="submit">Logout</button>
+        </form>
+        <img th:src="@{/images/kyn-aura-logo.png}" alt="Profile">
+    </div>
+</header>
+
+<nav class="child-menu" th:fragment="productChild(active)">
+    <a th:if="${@permissionService.has('PRODUCT','VIEW')}" th:href="@{/products}" th:classappend="${active == 'list'} ? 'active'">Product List</a>
+    <a th:if="${@permissionService.has('PRODUCT','CREATE')}" th:href="@{/products/new}" th:classappend="${active == 'new'} ? 'active'">New Product</a>
+    <a th:if="${@permissionService.has('BRAND','VIEW')}" th:href="@{/brands}" th:classappend="${active == 'brands'} ? 'active'">Brands</a>
+    <a th:if="${@permissionService.has('CATEGORY','VIEW')}" th:href="@{/categories}" th:classappend="${active == 'categories'} ? 'active'">Categories</a>
+    <a th:if="${@permissionService.has('STOCK','VIEW')}" th:href="@{/stock}" th:classappend="${active == 'stock'} ? 'active'">Stock Management</a>
+</nav>
+
+<nav class="child-menu" th:fragment="saleChild(active)">
+    <a th:if="${@permissionService.has('SALE_ORDER','VIEW')}" th:href="@{/orders}" th:classappend="${active == 'orders'} ? 'active'">Order List</a>
+    <a th:if="${@permissionService.has('SALE_ORDER','CREATE')}" th:href="@{/orders/new}" th:classappend="${active == 'new'} ? 'active'">Create Order</a>
+    <a th:if="${@permissionService.has('CUSTOMER','VIEW')}" th:href="@{/customers}" th:classappend="${active == 'customers'} ? 'active'">Customers</a>
+    <a th:if="${@permissionService.has('RETURN','VIEW')}" th:href="@{/returns}" th:classappend="${active == 'returns'} ? 'active'">Refund / Return</a>
+</nav>
+
+<nav class="child-menu" th:fragment="reportChild(active)">
+    <a th:if="${@permissionService.has('REPORT','VIEW')}" th:href="@{/reports}" th:classappend="${active == 'sales'} ? 'active'">Sale Report</a>
+    <a th:if="${@permissionService.has('REPORT','VIEW')}" th:href="@{/reports}" th:classappend="${active == 'settlement'} ? 'active'">Settlement Report</a>
+</nav>
+</body>
+</html>

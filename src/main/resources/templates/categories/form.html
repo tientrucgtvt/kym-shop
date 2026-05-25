@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Category - KYN AURA</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+<div th:replace="fragments/menu :: sidebar('product')"></div>
+<div class="page-shell">
+<div th:replace="fragments/menu :: topbar(${category.id == null ? 'New Category' : 'Edit Category'})"></div>
+<div class="section-bar">
+    <div th:replace="fragments/menu :: productChild('categories')"></div>
+</div>
+<main>
+    <section class="card">
+        <form th:action="@{/categories}" th:object="${category}" method="post">
+            <input type="hidden" th:field="*{id}">
+
+            <label>Name</label>
+            <input th:field="*{name}" required>
+
+            <label>Description</label>
+            <textarea th:field="*{description}" rows="3"></textarea>
+
+            <label>
+                <input type="checkbox" th:field="*{active}" style="width:auto"> Active
+            </label>
+
+            <button class="button" type="submit">Save Category</button>
+            <a class="button" th:href="@{/categories}">Back to Categories</a>
+        </form>
+    </section>
+</main>
+</div>
+</div>
+</body>
+</html>

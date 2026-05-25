@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - KYN AURA</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="login-page">
+<main class="login-card">
+    <img th:src="@{/images/kyn-aura-logo.png}" alt="KYN AURA logo">
+    <h1>KYN AURA</h1>
+    <p class="error" th:if="${param.error}">Invalid username or password.</p>
+    <p class="success" th:if="${param.logout}">You have been logged out.</p>
+    <form th:action="@{/login}" method="post">
+        <label>Username</label>
+        <input name="username" autofocus required>
+
+        <label>Password</label>
+        <input type="password" name="password" required>
+
+        <button class="button" type="submit">Login</button>
+    </form>
+    <p class="muted">Default admin: admin / admin123</p>
+</main>
+</body>
+</html>

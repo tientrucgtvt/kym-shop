@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Stock - KYN AURA</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+<div th:replace="fragments/menu :: sidebar('product')"></div>
+<div class="page-shell">
+<div th:replace="fragments/menu :: topbar('Stock Management')"></div>
+<div class="section-bar">
+    <div th:replace="fragments/menu :: productChild('stock')"></div>
+</div>
+<main>
+    <p class="success" th:if="${success}" th:text="${success}"></p>
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+
+    <section class="card" th:if="${@permissionService.has('STOCK','STOCK')}">
+        <h2>Import / Minus Stock</h2>
+        <form th:object="${form}" method="post">
+            <label>Product</label>
+            <select th:field="*{productId}" required>
+                <option value="">Select product</option>
+                <option th:each="product : ${products}" th:value="${product.id}"
+                        th:text="${product.sku + ' - ' + product.name + ' (stock: ' + @formatUtils.qty(product.stockQuantity) + ')'}"></option>
+            </select>
+
+            <div class="grid">
+                <div>
+                    <label>Quantity</label>
+                    <input type="number" min="1" th:field="*{quantity}">
+                </div>
+                <div>
+                    <label>Import Unit Cost</label>
+                    <input type="number" step="0.01" min="0" th:field="*{unitCost}">
+                </div>
+            </div>
+
+            <label>Note</label>
+            <textarea th:field="*{note}" rows="2"></textarea>
+
+            <button class="button" type="submit" th:formaction="@{/stock/import}">Import Stock</button>
+            <button class="button" type="submit" th:formaction="@{/stock/export}">Minus Stock</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>Import / Export History</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Product</th>
+                <th>Type</th>
+                <th>Quantity</th>
+                <th>Stock After</th>
+                <th>Reference</th>
+                <th>Note</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="movement : ${movements}">
+                <td th:text="${#temporals.format(movement.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${movement.product.name}"></td>
+                <td th:text="${movement.type}"></td>
+                <td th:text="${@formatUtils.qty(movement.quantity)}"></td>
+                <td th:text="${@formatUtils.qty(movement.stockAfter)}"></td>
+                <td th:text="${movement.reference}"></td>
+                <td th:text="${movement.note}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,397 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #eef1f6;
+    color: #1f2937;
+    font-family: Arial, sans-serif;
+}
+
+.login-page {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.login-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+    max-width: 420px;
+    padding: 32px;
+    width: 100%;
+}
+
+.login-card img {
+    border-radius: 12px;
+    height: 72px;
+    object-fit: contain;
+    width: 72px;
+}
+
+.app-shell {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    background: #1f2937;
+    color: #d1d5db;
+    flex: 0 0 240px;
+    min-height: 100vh;
+    padding: 16px 0;
+}
+
+.sidebar-brand {
+    align-items: center;
+    color: #ffffff;
+    display: flex;
+    font-weight: 700;
+    gap: 10px;
+    padding: 0 18px 20px;
+    text-decoration: none;
+}
+
+.sidebar-brand img {
+    background: #ffffff;
+    border-radius: 8px;
+    height: 34px;
+    object-fit: contain;
+    padding: 3px;
+    width: 34px;
+}
+
+.sidebar-label {
+    color: #8b98aa;
+    font-size: 12px;
+    margin: 16px 18px 8px;
+    text-transform: uppercase;
+}
+
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+nav a, .button {
+    background: #2563eb;
+    border: 0;
+    border-radius: 8px;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-block;
+    padding: 10px 14px;
+    text-decoration: none;
+}
+
+.link-button {
+    background: transparent;
+    border: 0;
+    color: #2563eb;
+    cursor: pointer;
+    font: inherit;
+    padding: 0;
+}
+
+.secondary-button {
+    background: #64748b;
+}
+
+.danger-button {
+    background: #dc2626;
+}
+
+.main-menu {
+    display: block;
+    margin-top: 0;
+}
+
+.main-menu a {
+    background: transparent;
+    border-left: 3px solid transparent;
+    border-radius: 0;
+    color: #cbd5e1;
+    display: block;
+    padding: 13px 18px;
+}
+
+.main-menu a:hover,
+.main-menu a.active {
+    background: #111827;
+    border-left-color: #38bdf8;
+    color: #ffffff;
+}
+
+.page-shell {
+    flex: 1;
+    min-width: 0;
+}
+
+.top-bar {
+    align-items: center;
+    background: #ffffff;
+    border-bottom: 1px solid #dbe2ea;
+    color: #1f2937;
+    display: flex;
+    justify-content: space-between;
+    min-height: 64px;
+    padding: 0 24px;
+}
+
+.top-bar-left {
+    align-items: center;
+    display: flex;
+    gap: 18px;
+}
+
+.top-bar h1 {
+    font-size: 18px;
+    margin: 0;
+}
+
+.top-bar p {
+    color: #64748b;
+    font-size: 13px;
+    margin: 5px 0 0;
+}
+
+.top-bar a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.menu-toggle {
+    color: #64748b;
+    font-size: 20px;
+}
+
+.top-actions {
+    align-items: center;
+    color: #64748b;
+    display: flex;
+    gap: 14px;
+}
+
+.top-actions img {
+    border-radius: 50%;
+    height: 34px;
+    object-fit: cover;
+    width: 34px;
+}
+
+.section-bar {
+    background: #ffffff;
+    border-bottom: 1px solid #dbe2ea;
+    padding: 10px 24px;
+}
+
+.child-menu {
+    background: transparent;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+}
+
+.child-menu a {
+    background: #f1f5f9;
+    color: #334155;
+}
+
+.child-menu a.active {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.brand-link {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+main {
+    padding: 24px;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.dashboard-charts {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr);
+}
+
+.dashboard-filter {
+    margin-bottom: 16px;
+}
+
+.metric-card h2 {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.sale-metric {
+    border-left: 4px solid #2563eb;
+}
+
+.refund-metric {
+    border-left: 4px solid #ef4444;
+}
+
+.discount-metric {
+    border-left: 4px solid #f59e0b;
+}
+
+.revenue-metric {
+    border-left: 4px solid #10b981;
+}
+
+.profit-metric {
+    border-left: 4px solid #8b5cf6;
+}
+
+.chart-card canvas {
+    display: block;
+    max-width: 100%;
+    width: 100%;
+}
+
+.chart-header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.chart-header h2 {
+    margin: 0;
+}
+
+.chart-header p {
+    margin: 4px 0 0;
+}
+
+label {
+    display: block;
+    font-weight: 700;
+    margin-top: 12px;
+}
+
+input, select, textarea {
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    margin-top: 6px;
+    padding: 10px;
+    width: 100%;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background: #f3f4f6;
+}
+
+.success {
+    background: #dcfce7;
+    border-left: 4px solid #16a34a;
+    padding: 12px;
+}
+
+.error {
+    background: #fee2e2;
+    border-left: 4px solid #dc2626;
+    padding: 12px;
+}
+
+.muted {
+    color: #6b7280;
+}
+
+.muted-row {
+    color: #94a3b8;
+}
+
+.muted-row strong {
+    color: #64748b;
+}
+
+.modal-backdrop {
+    align-items: center;
+    background: rgba(15, 23, 42, 0.56);
+    bottom: 0;
+    display: none;
+    justify-content: center;
+    left: 0;
+    padding: 20px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 20;
+}
+
+.modal-backdrop.open {
+    display: flex;
+}
+
+.modal-card {
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.24);
+    max-width: 460px;
+    padding: 24px;
+    width: 100%;
+}
+
+.modal-card h2 {
+    margin-top: 0;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+@media (max-width: 800px) {
+    .app-shell {
+        display: block;
+    }
+
+    .sidebar {
+        min-height: auto;
+    }
+
+    .top-bar {
+        align-items: flex-start;
+        gap: 12px;
+        padding: 14px 18px;
+    }
+
+    .dashboard-charts {
+        grid-template-columns: 1fr;
+    }
+}

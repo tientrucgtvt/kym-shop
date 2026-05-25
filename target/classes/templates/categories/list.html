@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Categories - KYN AURA</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+<div th:replace="fragments/menu :: sidebar('product')"></div>
+<div class="page-shell">
+<div th:replace="fragments/menu :: topbar('Categories')"></div>
+<div class="section-bar">
+    <div th:replace="fragments/menu :: productChild('categories')"></div>
+</div>
+<main>
+    <p class="success" th:if="${success}" th:text="${success}"></p>
+    <section class="card">
+        <a class="button" th:if="${@permissionService.has('CATEGORY','CREATE')}" th:href="@{/categories/new}">New Category</a>
+    </section>
+    <section class="card">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="category : ${categories}">
+                <td th:text="${@formatUtils.qty(category.id)}"></td>
+                <td th:text="${category.name}"></td>
+                <td th:text="${category.description}"></td>
+                <td th:text="${category.active ? 'Active' : 'Inactive'}"></td>
+                <td><a th:if="${@permissionService.has('CATEGORY','UPDATE')}" th:href="@{/categories/{id}/edit(id=${category.id})}">Edit</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</div>
+</div>
+</body>
+</html>

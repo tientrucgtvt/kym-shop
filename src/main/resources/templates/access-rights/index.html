@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Access Rights - KYN AURA</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+<div th:replace="fragments/menu :: sidebar('access')"></div>
+<div class="page-shell">
+<div th:replace="fragments/menu :: topbar('Access Rights')"></div>
+<main>
+    <p class="success" th:if="${success}" th:text="${success}"></p>
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+
+    <section class="card" th:if="${@permissionService.has('ACCESS_RIGHT','CREATE')}">
+        <h2>Create User</h2>
+        <form th:action="@{/access-rights/users}" method="post" class="grid">
+            <div>
+                <label>Username</label>
+                <input name="username" required>
+            </div>
+            <div>
+                <label>Full Name</label>
+                <input name="fullName">
+            </div>
+            <div>
+                <label>Password</label>
+                <input type="password" name="password" required>
+            </div>
+            <div>
+                <label>&nbsp;</label>
+                <button class="button" type="submit">Create User</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>Choose User</h2>
+        <form th:action="@{/access-rights}" method="get">
+            <select name="userId" onchange="this.form.submit()">
+                <option th:each="user : ${users}"
+                        th:value="${user.id}"
+                        th:selected="${selectedUser != null && selectedUser.id == user.id}"
+                        th:text="${user.username + ' - ' + (user.fullName ?: '')}"></option>
+            </select>
+        </form>
+    </section>
+
+    <section class="card" th:if="${selectedUser}">
+        <h2 th:text="${'Permissions for ' + selectedUser.username}">Permissions</h2>
+        <form th:action="@{/access-rights/save}" method="post">
+            <input type="hidden" name="userId" th:value="${selectedUser.id}">
+            <label>
+                <input type="checkbox" name="active" th:checked="${selectedUser.active}" style="width:auto"> Active
+            </label>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Page</th>
+                    <th>View</th>
+                    <th>Add</th>
+                    <th>Modify</th>
+                    <th>Delete</th>
+                    <th>Cancel</th>
+                    <th>Return</th>
+                    <th>Stock</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="page : ${pages}" th:with="right=${rights.get(page.key)}">
+                    <td th:text="${page.label}"></td>
+                    <td><input type="checkbox" th:name="${page.key + '_VIEW'}" th:checked="${right != null && right.canView}" style="width:auto"></td>
+                    <td><input type="checkbox" th:name="${page.key + '_CREATE'}" th:checked="${right != null && right.canCreate}" style="width:auto"></td>
+                    <td><input type="checkbox" th:name="${page.key + '_UPDATE'}" th:checked="${right != null && right.canUpdate}" style="width:auto"></td>
+                    <td><input type="checkbox" th:name="${page.key + '_DELETE'}" th:checked="${right != null && right.canDelete}" style="width:auto"></td>
+                    <td><input type="checkbox" th:name="${page.key + '_CANCEL'}" th:checked="${right != null && right.canCancel}" style="width:auto"></td>
+                    <td><input type="checkbox" th:name="${page.key + '_RETURN'}" th:checked="${right != null && right.canReturn}" style="width:auto"></td>
+                    <td><input type="checkbox" th:name="${page.key + '_STOCK'}" th:checked="${right != null && right.canStock}" style="width:auto"></td>
+                </tr>
+                </tbody>
+            </table>
+            <button class="button" th:if="${@permissionService.has('ACCESS_RIGHT','UPDATE')}" type="submit">Save Access Rights</button>
+        </form>
+    </section>
+</main>
+</div>
+</div>
+</body>
+</html>

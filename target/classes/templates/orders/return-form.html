@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Return Items - KYN AURA</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+<div th:replace="fragments/menu :: sidebar('sale')"></div>
+<div class="page-shell">
+<div th:replace="fragments/menu :: topbar(${'Return Items for ' + order.invoiceNumber})"></div>
+<div class="section-bar">
+    <div th:replace="fragments/menu :: saleChild('returns')"></div>
+</div>
+<main>
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+    <section class="card">
+        <a class="button" th:href="@{/orders/{id}(id=${order.id})}">Back to Invoice</a>
+    </section>
+
+    <section class="card">
+        <h2>Sold Items</h2>
+        <p class="muted">Use this list to check the exact item and available return quantity.</p>
+        <table>
+            <thead>
+            <tr>
+                <th>SKU</th>
+                <th>Item</th>
+                <th>Sold Qty</th>
+                <th>Returned Qty</th>
+                <th>Returnable Qty</th>
+                <th>Unit Price</th>
+                <th>Item Discount</th>
+                <th>Line Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${order.items}" th:classappend="${item.returnableQuantity == 0} ? 'muted-row'">
+                <td th:text="${item.product.sku}"></td>
+                <td th:text="${item.product.name}"></td>
+                <td th:text="${@formatUtils.qty(item.quantity)}"></td>
+                <td th:text="${@formatUtils.qty(item.returnedQuantity)}"></td>
+                <td>
+                    <strong th:text="${@formatUtils.qty(item.returnableQuantity)}"></strong>
+                </td>
+                <td th:text="${@formatUtils.vnd(item.unitPrice)}"></td>
+                <td th:text="${@formatUtils.vnd(item.discountAmount)}"></td>
+                <td th:text="${@formatUtils.vnd(item.lineTotal)}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="card">
+        <h2>Record Return</h2>
+        <form th:action="@{/orders/{id}/return(id=${order.id})}" th:object="${returnForm}" method="post">
+            <table>
+                <thead>
+                <tr>
+                    <th>Sold Item</th>
+                    <th>Return Quantity</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="line, stat : *{lines}">
+                    <td>
+                        <select th:field="*{lines[__${stat.index}__].orderItemId}">
+                            <option value="">Select item</option>
+                            <option th:each="item : ${order.items}" th:if="${item.returnableQuantity > 0}"
+                                    th:value="${item.id}"
+                                    th:text="${item.product.sku + ' - ' + item.product.name + ' | sold: ' + @formatUtils.qty(item.quantity) + ' | returned: ' + @formatUtils.qty(item.returnedQuantity) + ' | returnable: ' + @formatUtils.qty(item.returnableQuantity) + ' | unit: ' + @formatUtils.vnd(item.unitPrice)}"></option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="number" min="0" th:field="*{lines[__${stat.index}__].quantity}">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <label>Note</label>
+            <textarea th:field="*{note}" rows="3"></textarea>
+
+            <button class="button" type="submit">Record Return</button>
+        </form>
+    </section>
+</main>
+</div>
+</div>
+</body>
+</html>

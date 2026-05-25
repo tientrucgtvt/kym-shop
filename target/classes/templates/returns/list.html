@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Returns - KYN AURA</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+<div th:replace="fragments/menu :: sidebar('sale')"></div>
+<div class="page-shell">
+<div th:replace="fragments/menu :: topbar('Refund / Return History')"></div>
+<div class="section-bar">
+    <div th:replace="fragments/menu :: saleChild('returns')"></div>
+</div>
+<main>
+    <section class="card">
+        <table>
+            <thead>
+            <tr>
+                <th>Return No.</th>
+                <th>Date</th>
+                <th>Invoice</th>
+                <th>Refund</th>
+                <th>Note</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="returnRecord : ${returns}">
+                <td th:text="${returnRecord.returnNumber}"></td>
+                <td th:text="${#temporals.format(returnRecord.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                <td><a th:href="@{/orders/{id}(id=${returnRecord.order.id})}" th:text="${returnRecord.order.invoiceNumber}"></a></td>
+                <td th:text="${@formatUtils.vnd(returnRecord.refundAmount)}"></td>
+                <td th:text="${returnRecord.note}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</div>
+</div>
+</body>
+</html>

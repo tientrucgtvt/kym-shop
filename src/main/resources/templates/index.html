@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>KYN AURA</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+<div th:replace="fragments/menu :: sidebar('')"></div>
+<div class="page-shell">
+<div th:replace="fragments/menu :: topbar('Dashboard')"></div>
+<main>
+    <section class="card dashboard-filter">
+        <form th:action="@{/}" method="get" class="grid">
+            <div>
+                <label>From</label>
+                <input type="date" name="from" th:value="${dashboardFrom}">
+            </div>
+            <div>
+                <label>To</label>
+                <input type="date" name="to" th:value="${dashboardTo}">
+            </div>
+            <div>
+                <label>&nbsp;</label>
+                <button class="button" type="submit">Show Dashboard</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="grid">
+        <div class="card">
+            <h2 th:text="${@formatUtils.qty(productCount)}">0</h2>
+            <p>Total products</p>
+        </div>
+        <div class="card">
+            <h2 th:text="${@formatUtils.qty(orderCount)}">0</h2>
+            <p>Total orders</p>
+        </div>
+        <div class="card metric-card sale-metric">
+            <h2 th:text="${@formatUtils.vnd(totalSaleAmount)}">0 ₫</h2>
+            <p>Total sale amount</p>
+        </div>
+        <div class="card metric-card refund-metric">
+            <h2 th:text="${@formatUtils.vnd(totalRefundAmount)}">0 ₫</h2>
+            <p>Total refund amount</p>
+        </div>
+        <div class="card metric-card discount-metric">
+            <h2 th:text="${@formatUtils.vnd(totalDiscountAmount)}">0 ₫</h2>
+            <p>Total discount</p>
+        </div>
+        <div class="card metric-card revenue-metric">
+            <h2 th:text="${@formatUtils.vnd(revenueAmount)}">0 ₫</h2>
+            <p>Revenue</p>
+        </div>
+        <div class="card metric-card profit-metric">
+            <h2 th:text="${@formatUtils.vnd(profitAmount)}">0 ₫</h2>
+            <p>Profit</p>
+        </div>
+    </section>
+
+    <section class="dashboard-charts">
+        <div class="card chart-card">
+            <div class="chart-header">
+                <div>
+                    <h2>Sale Data</h2>
+                    <p class="muted">
+                        <span th:text="${dashboardFrom}">2026-01-01</span>
+                        to
+                        <span th:text="${dashboardTo}">2026-01-07</span>
+                    </p>
+                </div>
+            </div>
+            <canvas id="saleChart" height="260"></canvas>
+        </div>
+
+        <div class="card chart-card">
+            <div class="chart-header">
+                <div>
+                    <h2>Low Stock</h2>
+                    <p class="muted">Current stock against minimum level</p>
+                </div>
+            </div>
+            <p class="muted" th:if="${#lists.isEmpty(lowStockProducts)}">No low-stock products to chart.</p>
+            <canvas id="lowStockChart" height="260" th:if="${!#lists.isEmpty(lowStockProducts)}"></canvas>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>Low stock</h2>
+        <p class="muted" th:if="${#lists.isEmpty(lowStockProducts)}">No low-stock products.</p>
+        <table th:if="${!#lists.isEmpty(lowStockProducts)}">
+            <thead>
+            <tr>
+                <th>SKU</th>
+                <th>Name</th>
+                <th>Stock</th>
+                <th>Minimum</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${lowStockProducts}">
+                <td th:text="${product.sku}"></td>
+                <td th:text="${product.name}"></td>
+                <td th:text="${@formatUtils.qty(product.stockQuantity)}"></td>
+                <td th:text="${@formatUtils.qty(product.minStockLevel)}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</div>
+</div>
+<script th:inline="javascript">
+    const saleLabels = /*[[${saleChartLabels}]]*/ [];
+    const saleValues = /*[[${saleChartValues}]]*/ [];
+    const lowStockLabels = /*[[${lowStockLabels}]]*/ [];
+    const lowStockValues = /*[[${lowStockValues}]]*/ [];
+    const lowStockMinimums = /*[[${lowStockMinimums}]]*/ [];
+
+    function drawLineChart(canvasId, labels, values) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) {
+            return;
+        }
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width = canvas.offsetWidth;
+        const height = canvas.height;
+        const padding = 42;
+        const numericValues = values.map(Number);
+        const maxValue = Math.max(...numericValues, 1);
+        const plotWidth = width - padding * 2;
+        const plotHeight = height - padding * 2;
+
+        ctx.clearRect(0, 0, width, height);
+        ctx.strokeStyle = '#e5e7eb';
+        ctx.lineWidth = 1;
+        for (let i = 0; i <= 4; i++) {
+            const y = padding + (plotHeight / 4) * i;
+            ctx.beginPath();
+            ctx.moveTo(padding, y);
+            ctx.lineTo(width - padding, y);
+            ctx.stroke();
+        }
+
+        ctx.strokeStyle = '#2563eb';
+        ctx.fillStyle = 'rgba(37, 99, 235, 0.12)';
+        ctx.lineWidth = 3;
+        const points = numericValues.map((value, index) => ({
+            x: padding + (plotWidth / Math.max(labels.length - 1, 1)) * index,
+            y: padding + plotHeight - (value / maxValue) * plotHeight
+        }));
+        ctx.beginPath();
+        points.forEach((point, index) => index === 0 ? ctx.moveTo(point.x, point.y) : ctx.lineTo(point.x, point.y));
+        ctx.stroke();
+        ctx.lineTo(width - padding, height - padding);
+        ctx.lineTo(padding, height - padding);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = '#64748b';
+        ctx.font = '12px Arial';
+        labels.forEach((label, index) => {
+            const x = padding + (plotWidth / Math.max(labels.length - 1, 1)) * index;
+            ctx.fillText(label, x - 18, height - 12);
+        });
+    }
+
+    function drawBarChart(canvasId, labels, values, minimums) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) {
+            return;
+        }
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width = canvas.offsetWidth;
+        const height = canvas.height;
+        const padding = 42;
+        const numericValues = values.map(Number);
+        const numericMinimums = minimums.map(Number);
+        const maxValue = Math.max(...numericValues, ...numericMinimums, 1);
+        const barWidth = Math.max((width - padding * 2) / Math.max(labels.length, 1) - 16, 18);
+
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = '#64748b';
+        ctx.font = '12px Arial';
+
+        labels.forEach((label, index) => {
+            const x = padding + index * (barWidth + 16);
+            const stockHeight = (numericValues[index] / maxValue) * (height - padding * 2);
+            const minHeight = (numericMinimums[index] / maxValue) * (height - padding * 2);
+            ctx.fillStyle = '#f97316';
+            ctx.fillRect(x, height - padding - stockHeight, barWidth, stockHeight);
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillRect(x + barWidth / 4, height - padding - minHeight, barWidth / 2, 3);
+            ctx.fillStyle = '#64748b';
+            ctx.fillText(label.length > 12 ? label.slice(0, 12) + '...' : label, x - 4, height - 12);
+        });
+    }
+
+    drawLineChart('saleChart', saleLabels, saleValues);
+    drawBarChart('lowStockChart', lowStockLabels, lowStockValues, lowStockMinimums);
+</script>
+</body>
+</html>

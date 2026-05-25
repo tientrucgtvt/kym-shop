@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer - KYN AURA</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+<div th:replace="fragments/menu :: sidebar('sale')"></div>
+<div class="page-shell">
+<div th:replace="fragments/menu :: topbar('Edit Customer')"></div>
+<div class="section-bar">
+    <div th:replace="fragments/menu :: saleChild('customers')"></div>
+</div>
+<main>
+    <section class="card">
+        <form th:action="@{/customers}" th:object="${customer}" method="post">
+            <input type="hidden" th:field="*{id}">
+
+            <label>Customer Type</label>
+            <select th:field="*{type}">
+                <option value="INDIVIDUAL">Individual</option>
+                <option value="ORGANIZATION">Organization</option>
+            </select>
+
+            <label>Name</label>
+            <input th:field="*{name}" required>
+
+            <div class="grid">
+                <div>
+                    <label>Tax Number</label>
+                    <input th:field="*{taxNumber}">
+                </div>
+                <div>
+                    <label>Phone Number</label>
+                    <input th:field="*{phoneNumber}">
+                </div>
+            </div>
+
+            <label>Address</label>
+            <textarea th:field="*{address}" rows="3"></textarea>
+
+            <label>
+                <input type="checkbox" th:field="*{active}" style="width:auto"> Active
+            </label>
+
+            <button class="button" type="submit">Save Customer</button>
+            <a class="button" th:href="@{/customers}">Back to Customers</a>
+        </form>
+    </section>
+</main>
+</div>
+</div>
+</body>
+</html>

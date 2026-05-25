@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Access Denied - KYN AURA</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+<div th:replace="fragments/menu :: sidebar('')"></div>
+<div class="page-shell">
+<div th:replace="fragments/menu :: topbar('Access Denied')"></div>
+<main>
+    <section class="card">
+        <h2>Access denied</h2>
+        <p>You do not have permission to access this page or action.</p>
+        <a class="button" th:href="@{/}">Back to Dashboard</a>
+    </section>
+</main>
+</div>
+</div>
+</body>
+</html>
